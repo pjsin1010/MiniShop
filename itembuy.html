@@ -1,0 +1,256 @@
+<?php
+session_start();
+$connect = mysql_connect("34.84.109.194","root","gett888888");
+mysql_select_db("mm",$connect);
+
+
+
+$num = $_GET[num];
+$sql = "select * from trade where num = '$num';";
+$result = mysql_query($sql, $connect);
+$row = mysql_fetch_assoc($result);
+
+
+$page = $_GET[page];
+if(!$page) $page = 1;
+$scale = 15;
+
+
+//echo $row[board];
+//exit;
+
+?>
+
+
+<html lang="UTF-8"><head>
+        <title>제목</title>
+        <meta charset="UTF-8">
+
+        <link type="text/css" rel="stylesheet" href="./css/item.css?v=190924">
+		<link rel="stylesheet"  type="text/css" href="./css/button.css?3"> 
+     
+    </head>
+    <body>
+    <div class="g_container" id="g_CONTENT">
+    <div class="g_content">
+        <div class="g_title_green">
+            삽니다
+            <ul class="g_path">
+                <li>홈</li>
+                <li class="select">삽니다</li>
+            </ul>
+        </div>
+        <a name="top"></a>
+        <form name="itembuy" id="itembuy" method="POST" action="./php/item.php">
+            <div class="g_green_table">물품정보</div>
+            <table class="g_green_table">
+                <colgroup>
+                    <col width="160">
+                    <col width="250">
+                    <col width="160">
+                    <col>
+                </colgroup>
+                <tbody><tr>
+                    <th>카테고리</th>
+                                 <?php if($row[category] == '0101') { ?>
+              <td colspan="3">여성의류</td>  <? } ?>
+
+            <?php if($row[category] == '0102') { ?>
+              <td colspan="3">남성의류</td> <? } ?>
+            <?php if($row[category] == '0103') { ?>
+              <td colspan="3">쥬얼리</td> <? } ?>
+            <?php if($row[category] == '0104') { ?>
+              <td colspan="3">가방</td> <? } ?>
+            <?php if($row[category] == '0105') { ?>
+              <td colspan="3">언더웨어</td> <? } ?>
+            <?php if($row[category] == '0106') { ?>
+              <td colspan="3">지갑/벨트</td> <? } ?>
+            <?php if($row[category] == '0107') { ?>
+              <td colspan="3">시계</td> <? } ?>
+            <?php if($row[category] == '0108') { ?>
+              <td colspan="3">유아의류</td> <? } ?>
+
+            <?php if($row[category] == '0201') { ?>
+              <td colspan="3">스킨케어</td> <? } ?>
+            <?php if($row[category] == '0202') { ?>
+              <td colspan="3">메이크업</td> <? } ?>
+            <?php if($row[category] == '0203') { ?>
+              <td colspan="3">선케어</td> <? } ?>
+            <?php if($row[category] == '0204') { ?>
+              <td colspan="3">남성화장품</td> <? } ?>
+            <?php if($row[category] == '0205') { ?>
+              <td colspan="3">클렌징/필링</td> <? } ?>
+            <?php if($row[category] == '0206') { ?>
+              <td colspan="3">향수</td> <? } ?>
+
+            <?php if($row[category] == '0301') { ?>
+              <td colspan="3">스포츠</td> <? } ?>
+            <?php if($row[category] == '0302') { ?>
+              <td colspan="3">등산/아웃도어</td> <? } ?>
+            <?php if($row[category] == '0303') { ?>
+              <td colspan="3">캠핑</td> <? } ?>
+            <?php if($row[category] == '0304') { ?>
+              <td colspan="3">자동차용품</td> <? } ?>
+            <?php if($row[category] == '0305') { ?>
+              <td colspan="3">자전거</td> <? } ?>
+            <?php if($row[category] == '0306') { ?>
+              <td colspan="3">헬스</td> <? } ?>
+            <?php if($row[category] == '0307') { ?>
+              <td colspan="3">낚시</td> <? } ?>
+            <?php if($row[category] == '0308') { ?>
+              <td colspan="3">수영</td> <? } ?>
+            <?php if($row[category] == '0309') { ?>
+              <td colspan="3">라켓스포츠</td> <? } ?>
+
+            <?php if($row[category] == '0401') { ?>
+              <td colspan="3">농산</td> <? } ?>
+            <?php if($row[category] == '0402') { ?>
+              <td colspan="3">수산</td> <? } ?>
+            <?php if($row[category] == '0403') { ?>
+              <td colspan="3">축산</td> <? } ?>
+            <?php if($row[category] == '0404') { ?>
+              <td colspan="3">반찬/간편가정식</td> <? } ?>
+            <?php if($row[category] == '0405') { ?>
+              <td colspan="3">김치</td> <? } ?>
+            <?php if($row[category] == '0406') { ?>
+              <td colspan="3">가공식품</td> <? } ?>
+            <?php if($row[category] == '0407') { ?>
+              <td colspan="3">커피/생수/음료</td> <? } ?>
+            <?php if($row[category] == '0408') { ?>
+              <td colspan="3">과자/간식</td> <? } ?>
+            <?php if($row[category] == '0409') { ?>
+              <td colspan="3">즉석식품</td> <? } ?>
+            <?php if($row[category] == '0410') { ?>
+              <td colspan="3">건강식품</td> <? } ?>
+
+            <?php if($row[category] == '0501') { ?>
+              <td colspan="3">주방용품</td> <? } ?>
+            <?php if($row[category] == '0502') { ?>
+              <td colspan="3">수납정리용품</td> <? } ?>
+            <?php if($row[category] == '0503') { ?>
+              <td colspan="3">욕실용품</td> <? } ?>
+            <?php if($row[category] == '0504') { ?>
+              <td colspan="3">청소용품</td> <? } ?>
+            <?php if($row[category] == '0505') { ?>
+              <td colspan="3">세탁용품</td> <? } ?>
+            <?php if($row[category] == '0506') { ?>
+              <td colspan="3">세제/방향/살충</td> <? } ?>
+            <?php if($row[category] == '0507') { ?>
+              <td colspan="3">화장지</td> <? } ?>
+            <?php if($row[category] == '0508') { ?>
+              <td colspan="3">구강/세안/면도</td> <? } ?>
+
+            <?php if($row[category] == '0601') { ?>
+              <td colspan="3">침실가구</td> <? } ?>
+            <?php if($row[category] == '0602') { ?>
+              <td colspan="3">거실가구</td> <? } ?>
+            <?php if($row[category] == '0603') { ?>
+              <td colspan="3">서재/사무용가구</td> <? } ?>
+            <?php if($row[category] == '0604') { ?>
+              <td colspan="3">유아동가구</td> <? } ?>
+            <?php if($row[category] == '0605') { ?>
+              <td colspan="3">리모델링가구</td> <? } ?>
+            <?php if($row[category] == '0606') { ?>
+              <td colspan="3">커튼/블라인드</td> <? } ?>
+            <?php if($row[category] == '0607') { ?>
+              <td colspan="3">침구</td> <? } ?>
+            <?php if($row[category] == '0608') { ?>
+              <td colspan="3">조명</td> <? } ?>
+
+            <?php if($row[category] == '0701') { ?>
+              <td colspan="3">tv</td> <? } ?>
+            <?php if($row[category] == '0702') { ?>
+              <td colspan="3">노트북</td> <? } ?>
+            <?php if($row[category] == '0703') { ?>
+              <td colspan="3">냉장고</td> <? } ?>
+            <?php if($row[category] == '0704') { ?>
+              <td colspan="3">카메라/주변기기</td> <? } ?>
+            <?php if($row[category] == '0705') { ?>
+              <td colspan="3">모니터</td> <? } ?>
+            <?php if($row[category] == '0706') { ?>
+              <td colspan="3">휴대폰</td> <? } ?>
+            <?php if($row[category] == '0707') { ?>
+              <td colspan="3">세탁기/건조기</td> <? } ?>
+            <?php if($row[category] == '0708') { ?>
+              <td colspan="3">영상가전</td> <? } ?>
+            <?php if($row[category] == '0709') { ?>
+              <td colspan="3">데스크탑</td> <? } ?>
+            <?php if($row[category] == '0710') { ?>
+              <td colspan="3">태블릿</td> <? } ?>
+            <?php if($row[category] == '0711') { ?>
+              <td colspan="3">프린터/복합기</td> <? } ?>
+            <?php if($row[category] == '0712') { ?>
+              <td colspan="3">게임</td> <? } ?>
+            <?php if($row[category] == '0713') { ?>
+              <td colspan="3">pc부품</td> <? } ?>
+
+            <?php if($row[category] == '0801') { ?>
+              <td colspan="3">도서/음반</td> <? } ?>
+            <?php if($row[category] == '0802') { ?>
+              <td colspan="3">문구/사무용품</td> <? } ?>
+            <?php if($row[category] == '0803') { ?>
+              <td colspan="3">화방용품</td> <? } ?>
+            <?php if($row[category] == '0804') { ?>
+              <td colspan="3">악기</td> <? } ?>
+            <?php if($row[category] == '0805') { ?>
+              <td colspan="3">취미</td> <? } ?>
+            <?php if($row[category] == '0806') { ?>
+              <td colspan="3">꽃/원예</td> <? } ?>
+            <?php if($row[category] == '0807') { ?>
+              <td colspan="3">강아지용품</td> <? } ?>
+            <?php if($row[category] == '0808') { ?>
+              <td colspan="3">고양이용품</td> <? } ?>
+            <?php if($row[category] == '0809') { ?>
+              <td colspan="3">조류용품</td> <? } ?>
+                </tr>
+                <tr>
+                    <th>물품제목</th>
+                    <td colspan="3">
+						 <?php echo $row[title]; ?>
+                    </td>
+
+                </tr>
+
+                 <tr>
+ 
+                    <th>등록일시</th>
+                    <td> <?php echo $row[date]; ?> </td>
+
+					<th>거래상태</th>
+                    <?php if( $row[end]==0){ ?><td>  <font color="red">구매중  </font></td> <?} else {?>
+					<td><font color="blue"> 구매완료 </td> </font> <?}?>
+                </tr>
+
+                <tr>
+                    <th>희망가격</th>
+                    <td> <?php echo $row[amount]; ?> </td>
+					<th>거래번호</th>
+                    <td> <?php echo $row[num]; ?></td>
+					<input type="hidden" name="A" value=" <?php echo $row[num]; ?>">
+                    </tr>
+            </tbody>
+        </table>
+
+         <div class="g_subtitle">내용</div>
+        <div class="box6 trade_fraud" id="trade_fraud">
+            <?php echo $row[content]; ?>
+
+        </div>
+
+<center>
+				<?php if($_SESSION[userid] == $row[tid] && $row[end] == 0){ ?>
+        
+
+
+		<button id="login-btn" type="submit"  border="0" class="ui_btn_red">거래완료</button>  
+				<? } ?>
+				<?php if($_SESSION[userid] == $row[tid] && $row [end] == 1){ ?>
+		<a href="./php/cancel.php?num=<?=$row[num]?>" id="login-btn" type="submit"  border="0" class="ui_btn_red">거래철회</a>
+		        <? } ?>
+		<a onclick="history.back()" id="login-btn"   border="0" class="ui_btn_gray">뒤로가기</a>
+</center>
+        
+	</form>
+
+</body>
+</html>

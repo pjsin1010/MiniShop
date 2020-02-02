@@ -1,0 +1,1004 @@
+<?php
+
+include "../php/db.php";
+
+$search= $_GET[min];
+$search1= $_GET[max];
+$search2= $_GET[so]; //category
+$search3= $_GET[gu]; //group1
+$search4= $_GET[title];
+
+$page=$_GET[page];
+
+if(!$page) $page = 1;
+
+$scale = 17;   // 한 페이지 크기    = 5  
+
+//최소금액,지역,소분류 입력안했고 최대금액만 입력했을시
+if($search =="" && $search1 !="" && $search2 =="" && $search3 =="" && $search4 =="")  
+$sql =  "select * from trade  where  amount <= {$search1}   order by num desc;";
+
+//최소금액,지역,제목 입력안했고 최대금액,소분류 입력했을시
+if($search =="" && $sarch1 !="" && $search2 != "" && $search3 == ""  && $search4 =="") 
+$sql =  "select * from trade  where  amount <= {$search1} and category = {$search2}  order by num desc;";
+
+//최소금액,지역 입력안했고 최대금액,소분류,제목 입력했을시
+if($search =="" && $sarch1 !="" && $search2 != "" && $search3 == ""  && $search4 !="") 
+$sql =  "select * from trade  where  amount <= {$search1} and category = {$search2}  and title = {search4} order by num desc;";
+
+//최소금액,소분류,제목 입력안했고 최대금액,지역 입력했을시
+if($search =="" && $search1 !="" && $search2 == "" && $search3 != ""  && $search4 =="")  
+$sql =  "select * from trade  where  amount <= {$search1} and group1 = {$search3} order by num desc;";
+
+//최소금액,소분류 입력안했고 최대금액,지역,제목 입력했을시
+if($search =="" && $search1 !="" && $search2 == "" && $search3 != "" && $search4 !="")  
+$sql =  "select * from trade  where  amount <= {$search1} and group1 = {$search3}  and title = {search4} order by num desc;";
+
+//최소금액,소분류,지역 입력안했고 최대금액,제목 입력했을시
+if($search =="" && $search1 !="" && $search2 == "" && $search3 == "" && $search4 !="")  
+$sql =  "select * from trade  where  amount <= {$search1}  and title = {search4} order by num desc;";
+
+//최소금액 입력안했고 나머지 모두 입력했을시
+if($search =="" && $search1 !="" && $search2 != "" && $search3 != "" && $search4 !="")
+$sql =  "select * from trade  where  amount <= {$search1} and category = {$search2} and group1 = {$search3} and title = {search4} order by num desc;";
+
+
+
+
+
+//최대금액 입력안했을시
+if($search1 =="" && $search2 =="" && $search !="" && $search3 == ""  && $search4 =="") $sql = "select * from trade  where  amount >= {$search}    order by num desc;";
+//최소금액,카테고리 입력했을시
+if($search1 =="" && $search2 != "" && $search !="" && $search3 == ""  && $search4 =="") $sql = "select * from trade  where  amount >= {$search}   and category = {$search2} order by num desc;";
+
+
+
+
+//최소,최대금액 입력했을시
+if($search1 !="" && $search !="" && $search2 =="" && $search3 == ""  && $search4 =="") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1} order by num desc;";
+
+//최소,최대금액,카테고리 입력했을시
+if($search1 !="" && $search !="" && $search2 != "" && $search3 == ""  && $search4 =="") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1} and category = {$search2} order by num desc;";
+
+//최소,최대금액,지역 입력했을시
+if($search1 !="" && $search !="" && $search3 != "" && $search2 == ""  && $search4 =="") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1}  and group1 = {$search3} order by num desc;";
+
+//최소,최대금액,제목 입력했을시
+if($search1 !="" && $search !="" && $search4 != "" && $search3 == ""  && $search2 =="") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1}  and title like '%$search4%' order by num desc;";
+
+//최소,최대금액,제목,지역 입력했을시
+if($search1 !="" && $search !="" && $search4 != "" && $search3 != "" && $search2 == "") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1}  and group1 = {$search3} and title like '%$search4%' order by num desc;";
+
+//최소,최대금액,제목,카테고리 입력했을시
+if($search1 !="" && $search !="" && $search4 != "" && $search2 != "" && $search3 == "") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1}  and title like '%$search4%' and category = {$search2} order by num desc;";
+
+//최소,최대금액,지역,카테고리 입력했을시
+if($search1 !="" && $search !="" && $search3 != "" && $search2 != "" && $search4 =="") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1}  and group1 = {$search3} and category = {$search2} order by num desc;";
+
+//최소,최대금액,제목,지역,카테고리 입력했을시
+if($search1 !="" && $search !="" && $search4 != "" && $search3 != "" && $search2 != "") $sql = "select * from trade  where  {$search} <= amount and  amount <= {$search1} and category = {$search2} and group1 = {$search3} and title like '%$search4%' order by num desc;";
+
+
+
+
+//다입력안하고 출력
+if($search1 =="" && $search =="" && $search2 =="") $sql = "select * from trade where category = '0410' order by num desc;";
+
+//카테고리만 입력했을시
+if($search1 =="" && $search =="" && $search2 != "") $sql = "select * from trade where category = {$search2} order by num desc;";
+
+//지역만 입력했을시
+if($search1 =="" && $search =="" && $search3 != "") $sql = "select * from trade  where group1 = {$search3} order by num desc;";
+
+//제목만 입력했을시
+if($search4 !="" && $search =="" && $search1 =="" && $search2 =="" && $search3 =="" ) 
+$sql = "select * from trade  where title like '%$search4%' order by num desc;";
+
+//카테고리,지역 입력했을시
+if($search1 =="" && $search =="" && $search2 != "" && $search3 != "") $sql = "select * from trade where category = {$search2} and group1 = {$search3} order by num desc;";
+
+//카테고리,제목 입력했을시
+if($search1 =="" && $search =="" && $search2 != "" && $search4 !="") $sql = "select * from trade where category = {$search2} and title like '%$search4%' order by num desc;";
+
+//지역, 제목입력했을시
+if($search1 =="" && $search =="" && $search3 != "" && $search4 !="") $sql = "select * from trade  where group1 = {$search3} and title like '%$search4% order by num desc;";
+
+//카테고리,지역,제목 입력했을시
+if($search1 =="" && $search =="" && $search2 != "" && $search4 !="" && $search3 != "") $sql = "select * from trade where category = {$search2} and group1 = {$search3} and title like '%$search4%' order by num desc;";
+
+
+
+$result = mysql_query($sql , $connect);
+
+$total_record= mysql_num_rows($result); 
+
+if($total_record % $scale ==0)	
+$total_page = floor($total_record/$scale);        
+else
+$total_page = floor($total_record/$scale) + 1;   // 나머지가 있을경우 총페이지 + 1    ex) 6/5  =  1.1 + 1     총페이지=2
+
+$start=($page-1) * $scale;    // 페이지-1 * 한페이지 크기  = 시작페이지  ex) 2페이지 - 1  * 5   =  5
+$number=$total_record - $start; // 총페이지 - 시작점  = 번호      ex)6개 게시글기준  6 - 5 = 1      2페이지에 1번 게시글 
+
+$b_pageNum_list = 5;
+$block = ceil($page/$b_pageNum_list);
+$b_start_page = ( ($block - 1) * $b_pageNum_list ) + 1;
+$b_end_page = $b_start_page + $b_pageNum_list - 1; 
+?>
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>카테고리</title>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+	<link rel="stylesheet" type="text/css" href="../css/cat.css">
+	<link rel="stylesheet" type="text/css" href="../css/board.css">
+	<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+	<link href="https://fonts.googleapis.com/css?family=Amatic+SC|Nanum+Gothic|Nanum+Gothic+Coding|Nanum+Myeongjo|Nanum+Pen+Script|Noto+Serif+KR|Poiret+One|Roboto+Mono|Tangerine&display=swap&subset=korean" 
+	rel="stylesheet">
+
+	<style>
+		 
+		
+		/* 마이페이지 스타일 */
+		ul,li,ol,dl,dd,dt { padding:0; margin:0; }
+		dd { font-family:돋움, Dotum, 굴림, Gulim, Arial, sans-serif, Verdana, Helvetica, geneva; font-size:12px; color:#333; }
+		a{ text-decoration:none; }
+		ul,li,ol,dl,dd,dt{ list-style:none; }
+		#login_menu ul li{ float:left; width:100px; color:#fff; text-align:center; }
+		#login_menu ul li dl.dropdown{ border:3px #ccc solid; background:#FFC; display:none; }
+		#login_menu ul li dl.dropdown dd{height:30px; line-height:30px; border-bottom:1px #ccc solid; }
+		#login_menu ul li dl.dropdown a{ color:#333;  padding:0 0px; }
+		#login_menu ul li dl.dropdown a:hover{ background:#F60; color:#fff; }
+		
+		#login_menu ul li.menu3:hover .dropdown{ display:block; }
+   
+.pagination{display:-ms-flexbox;display:flex;padding-left:0;list-style:none;border-radius:.25rem}.page-link{position:relative;display:block;padding:.5rem .75rem;margin-left:-1px;line-height:1.25;color:#007bff;background-color:#fff;border:1px solid #dee2e6}.page-link:hover{z-index:2;color:#0056b3;text-decoration:none;background-color:#e9ecef;border-color:#dee2e6}.page-link:focus{z-index:2;outline:0;box-shadow:0 0 0 .2rem rgba(0,123,255,.25)}.page-item:first-child .page-link{margin-left:0;border-top-left-radius:.25rem;border-bottom-left-radius:.25rem}.page-item:last-child .page-link{border-top-right-radius:.25rem;border-bottom-right-radius:.25rem}.page-item.active .page-link{z-index:1;color:#fff;background-color:#007bff;border-color:#007bff}
+
+.justify-content-end{-ms-flex-pack:end!important;justify-content:flex-end!important}.justify-content-center{-ms-flex-pack:center!important;justify-content:center!important}
+
+
+    </style>
+    	
+
+
+</head>
+
+
+<body>
+
+<div id="mid_con">
+						<h2>건강식품<h2><hr>
+						
+					<div>
+
+					<div class="item">
+						<!--중앙 상품정렬 시작-->
+						<table class="board" id="Board">
+						<tr>
+							<th>번호</th>
+							<th>분류</th>
+							<th>지역</th>
+							<th>카테</th>
+							<th style="width:350px;">제목</th>
+							<th>아이디</th>
+							<th>날짜</th>
+						</tr>
+
+
+						 <?php
+  $i = 1;
+// while($row = mysql_fetch_assoc($result)){
+	for($i=$start; $i<$start+$scale && $i<$total_record; $i++)
+	{
+		mysql_data_seek($result, $i);     // 가져올 레코드로 위치 이동
+		$row = mysql_fetch_array($result);  // 하나의 레코드 가져오기
+?>	
+
+
+
+
+							<!-- 반복문 삽입은 여기-->
+						<tr >
+							<td><?php echo $row[num]; ?></td>
+
+							<?php if($row[end]==0 && $row[sell] == 1) { ?>
+							<td > <font color="red">판매중</td> </font>
+							<? } 
+							else if($row[end]==1 && $row[sell] == 1) {?>
+							<td><font color="blue">판매완료</td> </font>
+							<?}
+							else if($row[end]==0 && $row[sell] == 2) {?>
+							<td><font color="red"> 구매중</td></font>
+							<?}
+							else if($row[end]==1 && $row[sell] ==2) {?>
+							<td><font color="blue">구매완료</td></font>
+							<?}?>
+
+
+
+
+							
+      <?php if($row[group1] == '0101') { ?>
+              <td>강원도 강릉시</td> <? } ?>  
+           <?php if($row[group1] == '0102') { ?>
+              <td>강원도 고성군</td> <? } ?>
+           <?php if($row[group1] == '0103') { ?>
+              <td>강원도 동해시</td> <? } ?>
+           <?php if($row[group1] == '0104') { ?>
+              <td>강원도 삼척시</td> <? } ?>
+           <?php if($row[group1] == '0105') { ?>
+              <td>강원도 속초시</td> <? } ?>
+           <?php if($row[group1] == '0106') { ?>
+              <td>강원도 양구군</td> <? } ?>
+           <?php if($row[group1] == '0107') { ?>
+              <td>강원도 양양군</td> <? } ?>
+           <?php if($row[group1] == '0108') { ?>
+              <td>강원도 영월군</td> <? } ?>
+           <?php if($row[group1] == '0109') { ?>
+              <td>강원도 원주시</td> <? } ?>
+           <?php if($row[group1] == '0110') { ?>
+              <td>강원도 인제군</td> <? } ?>
+           <?php if($row[group1] == '0111') { ?>
+              <td>강원도 정선군</td> <? } ?>
+           <?php if($row[group1] == '0112') { ?>
+              <td>강원도 철원군</td> <? } ?>
+           <?php if($row[group1] == '0113') { ?>
+              <td>강원도 춘천시</td> <? } ?>
+           <?php if($row[group1] == '0114') { ?>
+              <td>강원도 태백시</td> <? } ?>
+           <?php if($row[group1] == '0115') { ?>
+              <td>강원도 평창군</td> <? } ?>
+           <?php if($row[group1] == '0116') { ?>
+              <td>강원도 홍청군</td> <? } ?>
+           <?php if($row[group1] == '0117') { ?>
+              <td>강원도 화천군</td> <? } ?>
+           <?php if($row[group1] == '0118') { ?>
+              <td>강원도 횡성군</td> <? } ?>
+            
+           <?php if($row[group1] == '0201') { ?>
+              <td>경기도 가평군</td> <? } ?>
+           <?php if($row[group1] == '0202') { ?>
+              <td>경기도 고양시 덕양구</td> <? } ?>
+           <?php if($row[group1] == '0203') { ?>
+              <td>경기도 고양시 일산동구</td> <? } ?>
+           <?php if($row[group1] == '0204') { ?>
+              <td>경기도 고양시 일산서구</td> <? } ?>
+           <?php if($row[group1] == '0205') { ?>
+              <td>경기도 과천시</td> <? } ?>
+           <?php if($row[group1] == '0206') { ?>
+              <td>경기도 광명시</td> <? } ?>
+           <?php if($row[group1] == '0207') { ?>
+              <td>경기도 광주시</td> <? } ?>
+           <?php if($row[group1] == '0208') { ?>
+              <td>경기도 구리시</td> <? } ?>
+           <?php if($row[group1] == '0209') { ?>
+              <td>경기도 군포시</td> <? } ?>
+           <?php if($row[group1] == '0210') { ?>
+              <td>경기도 김포시</td> <? } ?>
+           <?php if($row[group1] == '0211') { ?>
+              <td>경기도 남양주시</td> <? } ?>
+           <?php if($row[group1] == '0212') { ?>
+              <td>경기도 동두천시</td> <? } ?>
+           <?php if($row[group1] == '0213') { ?>
+              <td>경기도 부천시</td> <? } ?>
+           <?php if($row[group1] == '0214') { ?>
+              <td>경기도 성남시 분당구</td> <? } ?>
+           <?php if($row[group1] == '0215') { ?>
+              <td>경기도 성남시 수정구</td> <? } ?>
+           <?php if($row[group1] == '0216') { ?>
+              <td>경기도 성남시 중원구</td> <? } ?>
+           <?php if($row[group1] == '0217') { ?>
+              <td>경기도 수원시 영통구</td> <? } ?>
+           <?php if($row[group1] == '0218') { ?>
+              <td>경기도 수원시 장안구</td> <? } ?>
+           <?php if($row[group1] == '0219') { ?>
+              <td>경기도 수원시 팔달구</td> <? } ?>
+           <?php if($row[group1] == '0220') { ?>
+              <td>경기도 시흥시</td> <? } ?>
+           <?php if($row[group1] == '0221') { ?>
+              <td>경기도 안산시 동안구</td> <? } ?>
+           <?php if($row[group1] == '0222') { ?>
+              <td>경기도 안산시 상록구</td> <? } ?>
+           <?php if($row[group1] == '0223') { ?>
+              <td>경기도 안성시</td> <? } ?> 
+           <?php if($row[group1] == '0224') { ?>
+              <td>경기도 안양시 동안구</td> <? } ?>
+           <?php if($row[group1] == '0225') { ?>
+              <td>경기도 안양시 만안구</td> <? } ?>
+           <?php if($row[group1] == '0226') { ?>
+              <td>경기도 양주시</td> <? } ?> 
+           <?php if($row[group1] == '0227') { ?>
+              <td>경기도 양평군</td> <? } ?> 
+           <?php if($row[group1] == '0228') { ?>
+              <td>경기도 여주시</td> <? } ?> 
+           <?php if($row[group1] == '0229') { ?>
+              <td>경기도 연천군</td> <? } ?> 
+           <?php if($row[group1] == '0230') { ?>
+              <td>경기도 오산시</td> <? } ?> 
+           <?php if($row[group1] == '0231') { ?>
+              <td>경기도 용인시 기흥구</td> <? } ?>
+           <?php if($row[group1] == '0232') { ?>
+              <td>경기도 용인시 수지구</td> <? } ?>
+           <?php if($row[group1] == '0233') { ?>
+              <td>경기도 용인시 처인구</td> <? } ?>
+           <?php if($row[group1] == '0234') { ?>
+              <td>경기도 의왕시</td> <? } ?> 
+           <?php if($row[group1] == '0235') { ?>
+              <td>경기도 의정부시</td> <? } ?> 
+           <?php if($row[group1] == '0236') { ?>
+              <td>경기도 이천시</td> <? } ?> 
+           <?php if($row[group1] == '0237') { ?>
+              <td>경기도 파주시</td> <? } ?> 
+           <?php if($row[group1] == '0238') { ?>
+              <td>경기도 평택시</td> <? } ?> 
+           <?php if($row[group1] == '0239') { ?>
+              <td>경기도 포천시</td> <? } ?> 
+           <?php if($row[group1] == '0240') { ?>
+              <td>경기도 하남시</td> <? } ?> 
+           <?php if($row[group1] == '0241') { ?>
+              <td>경기도 화성시</td> <? } ?> 
+            
+           <?php if($row[group1] == '0301') { ?>
+              <td>경상남도 거제시</td> <? } ?> 
+           <?php if($row[group1] == '0302') { ?>
+              <td>경상남도 거창군</td> <? } ?> 
+           <?php if($row[group1] == '0303') { ?>
+              <td>경상남도 고성군</td> <? } ?> 
+           <?php if($row[group1] == '0304') { ?>
+              <td>경상남도 김해</td> <? } ?> 
+           <?php if($row[group1] == '0305') { ?>
+              <td>경상남도 남해군</td> <? } ?> 
+           <?php if($row[group1] == '0306') { ?>
+              <td>경상남도 밀양시</td> <? } ?> 
+           <?php if($row[group1] == '0307') { ?>
+              <td>경상남도 사천시</td> <? } ?> 
+           <?php if($row[group1] == '0308') { ?>
+              <td>경상남도 산청군</td> <? } ?> 
+           <?php if($row[group1] == '0309') { ?>
+              <td>경상남도 양산시</td> <? } ?> 
+           <?php if($row[group1] == '0310') { ?>
+              <td>경상남도 의령군</td> <? } ?> 
+           <?php if($row[group1] == '0311') { ?>
+              <td>경상남도 진주시</td> <? } ?> 
+           <?php if($row[group1] == '0312') { ?>
+              <td>경상남도 창녕군</td> <? } ?> 
+           <?php if($row[group1] == '0313') { ?>
+              <td>경상남도 창원시 마산합포구</td> <? } ?>
+           <?php if($row[group1] == '0314') { ?>
+              <td>경상남도 창원시 마산회원구</td> <? } ?>
+           <?php if($row[group1] == '0315') { ?>
+              <td>경상남도 창원시 성산구</td> <? } ?>
+           <?php if($row[group1] == '0316') { ?>
+              <td>경상남도 창원시 의창구</td> <? } ?>
+           <?php if($row[group1] == '0317') { ?>
+              <td>경상남도 창원시 진해구</td> <? } ?>
+           <?php if($row[group1] == '0318') { ?>
+              <td>경상남도 통영시</td> <? } ?>
+           <?php if($row[group1] == '0319') { ?>
+              <td>경상남도 하동군</td> <? } ?>
+           <?php if($row[group1] == '0320') { ?>
+              <td>경상남도 함안군</td> <? } ?>
+           <?php if($row[group1] == '0321') { ?>
+              <td>경상남도 함양군</td> <? } ?>
+           <?php if($row[group1] == '0322') { ?>
+              <td>경상남도 합천</td> <? } ?>
+            
+           <?php if($row[group1] == '0401') { ?>
+              <td>경상북도 경산시</td> <? } ?>
+           <?php if($row[group1] == '0402') { ?>
+              <td>경상북도 경주시</td> <? } ?>
+           <?php if($row[group1] == '0403') { ?>
+              <td>경상북도 고령군</td> <? } ?>
+           <?php if($row[group1] == '0404') { ?>
+              <td>경상북도 구미시</td> <? } ?>
+           <?php if($row[group1] == '0405') { ?>
+              <td>경상북도 군위군</td> <? } ?>
+           <?php if($row[group1] == '0406') { ?>
+              <td>경상북도 김천시</td> <? } ?>
+           <?php if($row[group1] == '0407') { ?>
+              <td>경상북도 문경시</td> <? } ?>
+           <?php if($row[group1] == '0408') { ?>
+              <td>경상북도 봉화군</td> <? } ?>
+           <?php if($row[group1] == '0409') { ?>
+              <td>경상북도 상주시</td> <? } ?>
+           <?php if($row[group1] == '0410') { ?>
+              <td>경상북도 성주군</td> <? } ?>
+           <?php if($row[group1] == '0411') { ?>
+              <td>경상북도 안동시</td> <? } ?>
+           <?php if($row[group1] == '0412') { ?>
+              <td>경상북도 영덕군</td> <? } ?>
+           <?php if($row[group1] == '0413') { ?>
+              <td>경상북도 영양군</td> <? } ?>
+           <?php if($row[group1] == '0414') { ?>
+              <td>경상북도 영주시</td> <? } ?>
+           <?php if($row[group1] == '0415') { ?>
+              <td>경상북도 영천시</td> <? } ?>
+           <?php if($row[group1] == '0416') { ?>
+              <td>경상북도 예천군</td> <? } ?>
+           <?php if($row[group1] == '0417') { ?>
+              <td>경상북도 울릉군</td> <? } ?>
+           <?php if($row[group1] == '0418') { ?>
+              <td>경상북도 울진군</td> <? } ?>
+           <?php if($row[group1] == '0419') { ?>
+              <td>경상북도 의성군</td> <? } ?>
+           <?php if($row[group1] == '0420') { ?>
+              <td>경상북도 청도군</td> <? } ?>
+           <?php if($row[group1] == '0421') { ?>
+              <td>경상북도 청송군</td> <? } ?>
+           <?php if($row[group1] == '0422') { ?>
+              <td>경상북도 칠곡군</td> <? } ?>
+           <?php if($row[group1] == '0423') { ?>
+              <td>경상북도 포항시 남구</td> <? } ?>
+           <?php if($row[group1] == '0424') { ?>
+              <td>경상북도 포항시 북구</td> <? } ?>
+            
+           <?php if($row[group1] == '0501') { ?>
+              <td>광주 광산구</td> <? } ?>
+           <?php if($row[group1] == '0502') { ?>
+              <td>광주 남구</td> <? } ?>
+           <?php if($row[group1] == '0503') { ?>
+              <td>광주 동구</td> <? } ?>
+           <?php if($row[group1] == '0504') { ?>
+              <td>광주 북구</td> <? } ?>
+           <?php if($row[group1] == '0505') { ?>
+              <td>광주 서구</td> <? } ?>
+            
+           <?php if($row[group1] == '0601') { ?>
+              <td>대구 남구</td> <? } ?>
+           <?php if($row[group1] == '0602') { ?>
+              <td>대구 달서구</td> <? } ?>
+           <?php if($row[group1] == '0603') { ?>
+              <td>대구 달성군</td> <? } ?>
+           <?php if($row[group1] == '0604') { ?>
+              <td>대구 동구</td> <? } ?>
+           <?php if($row[group1] == '0605') { ?>
+              <td>대구 북구</td> <? } ?>
+           <?php if($row[group1] == '0606') { ?>
+              <td>대구 서구</td> <? } ?>
+           <?php if($row[group1] == '0607') { ?>
+              <td>대구 수성구</td> <? } ?>
+           <?php if($row[group1] == '0608') { ?>
+              <td>대구 중구</td> <? } ?>
+            
+           <?php if($row[group1] == '0701') { ?>
+              <td>대전 대덕구</td> <? } ?>
+           <?php if($row[group1] == '0702') { ?>
+              <td>대전 동구</td> <? } ?>
+           <?php if($row[group1] == '0703') { ?>
+              <td>대전 서구</td> <? } ?>
+           <?php if($row[group1] == '0704') { ?>
+              <td>대전 유성구</td> <? } ?>
+           <?php if($row[group1] == '0705') { ?>
+              <td>대전 중구</td> <? } ?>
+            
+           <?php if($row[group1] == '0801') { ?>
+              <td>부산시 강서구</td> <? } ?>
+           <?php if($row[group1] == '0802') { ?>
+              <td>부산시 금정구</td> <? } ?>
+           <?php if($row[group1] == '0803') { ?>
+              <td>부산시 기장군</td> <? } ?>
+           <?php if($row[group1] == '0804') { ?>
+              <td>부산시 남구</td> <? } ?>
+           <?php if($row[group1] == '0805') { ?>
+              <td>부산시 동구</td> <? } ?>
+           <?php if($row[group1] == '0806') { ?>
+              <td>부산시 동래구</td> <? } ?>
+           <?php if($row[group1] == '0807') { ?>
+              <td>부산시 부산진구</td> <? } ?>
+           <?php if($row[group1] == '0808') { ?>
+              <td>부산시 북구</td> <? } ?>
+           <?php if($row[group1] == '0809') { ?>
+              <td>부산시 사상구</td> <? } ?>
+           <?php if($row[group1] == '0810') { ?>
+              <td>부산시 사하구</td> <? } ?>
+           <?php if($row[group1] == '0811') { ?>
+              <td>부산시 서구</td> <? } ?>
+           <?php if($row[group1] == '0812') { ?>
+              <td>부산시 수영구</td> <? } ?>
+           <?php if($row[group1] == '0813') { ?>
+              <td>부산시 연제구</td> <? } ?>
+           <?php if($row[group1] == '0814') { ?>
+              <td>부산시 영도구</td> <? } ?>
+           <?php if($row[group1] == '0815') { ?>
+              <td>부산시 중구</td> <? } ?>
+           <?php if($row[group1] == '0816') { ?>
+              <td>부산시 해운대구</td> <? } ?>
+            
+            
+           <?php if($row[group1] == '0901') { ?>
+              <td>서울 강남구</td> <? } ?>
+           <?php if($row[group1] == '0902') { ?>
+              <td>서울 강동구</td> <? } ?> 
+           <?php if($row[group1] == '0903') { ?>
+              <td>서울 강북구</td> <? } ?> 
+           <?php if($row[group1] == '0904') { ?>
+              <td>서울 강서구</td> <? } ?> 
+           <?php if($row[group1] == '0905') { ?>
+              <td>서울 관악구</td> <? } ?>
+           <?php if($row[group1] == '0906') { ?>
+              <td>서울 광진구</td> <? } ?>
+           <?php if($row[group1] == '0907') { ?>
+              <td>서울 구로구</td> <? } ?>
+           <?php if($row[group1] == '0908') { ?>
+              <td>서울 금천구</td> <? } ?>
+           <?php if($row[group1] == '0909') { ?>
+              <td>서울 노원구</td> <? } ?>
+           <?php if($row[group1] == '0910') { ?>
+              <td>서울 동대문구</td> <? } ?>
+           <?php if($row[group1] == '0911') { ?>
+              <td>서울 동작구</td> <? } ?>
+           <?php if($row[group1] == '0912') { ?>
+              <td>서울 마포구</td> <? } ?>
+           <?php if($row[group1] == '0913') { ?>
+              <td>서울 서대문구</td> <? } ?>
+           <?php if($row[group1] == '0914') { ?>
+              <td>서울 서초구</td> <? } ?>
+           <?php if($row[group1] == '0915') { ?>
+              <td>서울 성동구</td> <? } ?> 
+           <?php if($row[group1] == '0916') { ?>
+              <td>서울 성북구</td> <? } ?>
+           <?php if($row[group1] == '0917') { ?>
+              <td>서울 송파구</td> <? } ?>
+           <?php if($row[group1] == '0918') { ?>
+              <td>서울 양천구</td> <? } ?> 
+           <?php if($row[group1] == '0919') { ?>
+              <td>서울 영등포구</td> <? } ?> 
+           <?php if($row[group1] == '0920') { ?>
+              <td>서울 용산구</td> <? } ?>
+           <?php if($row[group1] == '0921') { ?>
+              <td>서울 은평구</td> <? } ?> 
+           <?php if($row[group1] == '0922') { ?>
+              <td>서울 종로구</td> <? } ?> 
+           <?php if($row[group1] == '0923') { ?>
+              <td>서울 종구</td> <? } ?> 
+           <?php if($row[group1] == '0924') { ?>
+              <td>서울 중량구</td> <? } ?> 
+            
+           <?php if($row[group1] == '1001') { ?>
+              <td>울산 남구</td> <? } ?>
+           <?php if($row[group1] == '1002') { ?>
+              <td>울산 동구</td> <? } ?> 
+           <?php if($row[group1] == '1003') { ?>
+              <td>울산 북구</td> <? } ?> 
+           <?php if($row[group1] == '1004') { ?>
+              <td>울산 울주군</td> <? } ?> 
+           <?php if($row[group1] == '1005') { ?>
+              <td>울산 중구</td> <? } ?>
+            
+           <?php if($row[group1] == '1101') { ?>
+              <td>인천 강화군</td> <? } ?>
+           <?php if($row[group1] == '1102') { ?>
+              <td>인천 계양구</td> <? } ?>
+           <?php if($row[group1] == '1103') { ?>
+              <td>인천 남동구</td> <? } ?>
+           <?php if($row[group1] == '1104') { ?>
+              <td>인천 동구</td> <? } ?>
+           <?php if($row[group1] == '1105') { ?>
+              <td>인천 미추홀구</td> <? } ?>
+           <?php if($row[group1] == '1106') { ?>
+              <td>인천 부평구</td> <? } ?>
+           <?php if($row[group1] == '1107') { ?>
+              <td>인천 서구</td> <? } ?>
+           <?php if($row[group1] == '1108') { ?>
+              <td>인천 연수구</td> <? } ?>
+           <?php if($row[group1] == '1109') { ?>
+              <td>인천 옹진구</td> <? } ?>
+           <?php if($row[group1] == '1110') { ?>
+              <td>인천 중구</td> <? } ?>
+            
+           <?php if($row[group1] == '1201') { ?>
+              <td>전라남도 강진군</td> <? } ?>
+           <?php if($row[group1] == '1202') { ?>
+              <td>전라남도 고흥군</td> <? } ?>
+           <?php if($row[group1] == '1203') { ?>
+              <td>전라남도 곡성군</td> <? } ?>
+           <?php if($row[group1] == '1204') { ?>
+              <td>전라남도 광양시</td> <? } ?>
+           <?php if($row[group1] == '1205') { ?>
+              <td>전라남도 구례군</td> <? } ?>
+           <?php if($row[group1] == '1206') { ?>
+              <td>전라남도 나주시</td> <? } ?>
+           <?php if($row[group1] == '1207') { ?>
+              <td>전라남도 담양군</td> <? } ?>
+           <?php if($row[group1] == '1208') { ?>
+              <td>전라남도 목포시</td> <? } ?>
+           <?php if($row[group1] == '1209') { ?>
+              <td>전라남도 무안군</td> <? } ?>
+           <?php if($row[group1] == '1210') { ?>
+              <td>전라남도 보성군</td> <? } ?>
+           <?php if($row[group1] == '1211') { ?>
+              <td>전라남도 순천시</td> <? } ?>
+           <?php if($row[group1] == '1212') { ?>
+              <td>전라남도 신안군</td> <? } ?>
+           <?php if($row[group1] == '1213') { ?>
+              <td>전라남도 여수시</td> <? } ?>
+           <?php if($row[group1] == '1214') { ?>
+              <td>전라남도 영광군</td> <? } ?>
+           <?php if($row[group1] == '1215') { ?>
+              <td>전라남도 영암군</td> <? } ?>
+           <?php if($row[group1] == '1216') { ?>
+              <td>전라남도 완도군</td> <? } ?>
+           <?php if($row[group1] == '1217') { ?>
+              <td>전라남도 장성군</td> <? } ?>
+           <?php if($row[group1] == '1218') { ?>
+              <td>전라남도 장흥군</td> <? } ?>
+           <?php if($row[group1] == '1219') { ?>
+              <td>전라남도 진도군</td> <? } ?>
+           <?php if($row[group1] == '1220') { ?>
+              <td>전라남도 함평군</td> <? } ?>
+           <?php if($row[group1] == '1221') { ?>
+              <td>전라남도 해남군</td> <? } ?>
+           <?php if($row[group1] == '1222') { ?>
+              <td>전라남도 화순군</td> <? } ?>
+            
+           <?php if($row[group1] == '1301') { ?>
+              <td>전라북도 고창군</td> <? } ?>
+           <?php if($row[group1] == '1302') { ?>
+              <td>전라북도 군산시</td> <? } ?>
+           <?php if($row[group1] == '1303') { ?>
+              <td>전라북도 김제시</td> <? } ?>
+           <?php if($row[group1] == '1304') { ?>
+              <td>전라북도 남원시</td> <? } ?>
+           <?php if($row[group1] == '1305') { ?>
+              <td>전라북도 무주군</td> <? } ?>
+           <?php if($row[group1] == '1306') { ?>
+              <td>전라북도 부안군</td> <? } ?>
+           <?php if($row[group1] == '1307') { ?>
+              <td>전라북도 순창군</td> <? } ?>
+           <?php if($row[group1] == '1308') { ?>
+              <td>전라북도 완주군</td> <? } ?>
+           <?php if($row[group1] == '1309') { ?>
+              <td>전라북도 익산시</td> <? } ?>
+           <?php if($row[group1] == '1310') { ?>
+              <td>전라북도 임실군</td> <? } ?>
+           <?php if($row[group1] == '1311') { ?>
+              <td>전라북도 장수군</td> <? } ?>
+           <?php if($row[group1] == '1312') { ?>
+              <td>전라북도 전주시 덕친구</td> <? } ?>
+           <?php if($row[group1] == '1313') { ?>
+              <td>전라북도 전주시 완산구</td> <? } ?>
+           <?php if($row[group1] == '1314') { ?>
+              <td>전라북도 정읍시</td> <? } ?>
+           <?php if($row[group1] == '1315') { ?>
+              <td>전라북도 진안군</td> <? } ?>
+            
+           <?php if($row[group1] == '1401') { ?>
+              <td>제주도 서귀포</td> <? } ?>
+           <?php if($row[group1] == '1402') { ?>
+              <td>제주시 제주시</td> <? } ?>
+            
+           <?php if($row[group1] == '1501') { ?>
+              <td>충청남도 계룡시</td> <? } ?>
+           <?php if($row[group1] == '1502') { ?>
+              <td>충청남도 공주시</td> <? } ?>
+           <?php if($row[group1] == '1503') { ?>
+              <td>충청남도 금산군</td> <? } ?>
+           <?php if($row[group1] == '1504') { ?>
+              <td>충청남도 논산시</td> <? } ?>
+           <?php if($row[group1] == '1505') { ?>
+              <td>충청남도 당진시</td> <? } ?>
+           <?php if($row[group1] == '1506') { ?>
+              <td>충청남도 보령시</td> <? } ?>
+           <?php if($row[group1] == '1507') { ?>
+              <td>충청남도 부여군</td> <? } ?>
+           <?php if($row[group1] == '1508') { ?>
+              <td>충청남도 서산시</td> <? } ?>
+           <?php if($row[group1] == '1509') { ?>
+              <td>충청남도 서천군</td> <? } ?>
+           <?php if($row[group1] == '1510') { ?>
+              <td>충청남도 아산시</td> <? } ?>
+           <?php if($row[group1] == '1511') { ?>
+              <td>충청남도 예산군</td> <? } ?>
+           <?php if($row[group1] == '1512') { ?>
+              <td>충청남도 천안시 동남구</td> <? } ?>
+           <?php if($row[group1] == '1513') { ?>
+              <td>충청남도 전안시 서북구</td> <? } ?>
+           <?php if($row[group1] == '1514') { ?>
+              <td>충청남도 청양군</td> <? } ?>
+           <?php if($row[group1] == '1515') { ?>
+              <td>충청남도 태안군</td> <? } ?>
+           <?php if($row[group1] == '1516') { ?>
+              <td>충청남도 홍성군</td> <? } ?>
+            
+           <?php if($row[group1] == '1601') { ?>
+              <td>충청북도 괴산군</td> <? } ?>
+           <?php if($row[group1] == '1602') { ?>
+              <td>충청북도 단양군</td> <? } ?>
+           <?php if($row[group1] == '1603') { ?>
+              <td>충청북도 보은군</td> <? } ?>
+           <?php if($row[group1] == '1604') { ?>
+              <td>충청북도 영동군</td> <? } ?>
+           <?php if($row[group1] == '1605') { ?>
+              <td>충청북도 옥천군</td> <? } ?>
+           <?php if($row[group1] == '1606') { ?>
+              <td>충청북도 음성군</td> <? } ?>
+           <?php if($row[group1] == '1607') { ?>
+              <td>충청북도 제천시</td> <? } ?>
+           <?php if($row[group1] == '1608') { ?>
+              <td>충청북도 증평군</td> <? } ?>
+           <?php if($row[group1] == '1609') { ?>
+              <td>충청북도 진천군</td> <? } ?>
+           <?php if($row[group1] == '1610') { ?>
+              <td>충청북도 청주시 상당구</td> <? } ?>
+           <?php if($row[group1] == '1611') { ?>
+              <td>충청북도 청주시 서원구</td> <? } ?>
+           <?php if($row[group1] == '1612') { ?>
+              <td>충청북도 청주시 청원구</td> <? } ?>
+           <?php if($row[group1] == '1613') { ?>
+              <td>충청북도 청주시 흥덕구</td> <? } ?>
+           <?php if($row[group1] == '1614') { ?>
+              <td>충청북도 충주시</td <? } ?>
+							           <?php if($row[category] == '0101') { ?>
+              <td>여성의류</td>  <? } ?>
+
+            <?php if($row[category] == '0102') { ?>
+              <td>남성의류</td> <? } ?>
+            <?php if($row[category] == '0103') { ?>
+              <td>쥬얼리</td> <? } ?>
+            <?php if($row[category] == '0104') { ?>
+              <td>가방</td> <? } ?>
+            <?php if($row[category] == '0105') { ?>
+              <td>언더웨어</td> <? } ?>
+            <?php if($row[category] == '0106') { ?>
+              <td>지갑/벨트</td> <? } ?>
+            <?php if($row[category] == '0107') { ?>
+              <td>시계</td> <? } ?>
+            <?php if($row[category] == '0108') { ?>
+              <td>유아의류</td> <? } ?>
+
+            <?php if($row[category] == '0201') { ?>
+              <td>스킨케어</td> <? } ?>
+            <?php if($row[category] == '0202') { ?>
+              <td>메이크업</td> <? } ?>
+            <?php if($row[category] == '0203') { ?>
+              <td>선케어</td> <? } ?>
+            <?php if($row[category] == '0204') { ?>
+              <td>남성화장품</td> <? } ?>
+            <?php if($row[category] == '0205') { ?>
+              <td>클렌징/필링</td> <? } ?>
+            <?php if($row[category] == '0206') { ?>
+              <td>향수</td> <? } ?>
+
+            <?php if($row[category] == '0301') { ?>
+              <td>스포츠</td> <? } ?>
+            <?php if($row[category] == '0302') { ?>
+              <td>등산/아웃도어</td> <? } ?>
+            <?php if($row[category] == '0303') { ?>
+              <td>캠핑</td> <? } ?>
+            <?php if($row[category] == '0304') { ?>
+              <td>자동차용품</td> <? } ?>
+            <?php if($row[category] == '0305') { ?>
+              <td>자전거</td> <? } ?>
+            <?php if($row[category] == '0306') { ?>
+              <td>헬스</td> <? } ?>
+            <?php if($row[category] == '0307') { ?>
+              <td>낚시</td> <? } ?>
+            <?php if($row[category] == '0308') { ?>
+              <td>수영</td> <? } ?>
+            <?php if($row[category] == '0309') { ?>
+              <td>라켓스포츠</td> <? } ?>
+
+            <?php if($row[category] == '0401') { ?>
+              <td>농산</td> <? } ?>
+            <?php if($row[category] == '0402') { ?>
+              <td>수산</td> <? } ?>
+            <?php if($row[category] == '0403') { ?>
+              <td>축산</td> <? } ?>
+            <?php if($row[category] == '0404') { ?>
+              <td>반찬/간편가정식</td> <? } ?>
+            <?php if($row[category] == '0405') { ?>
+              <td>김치</td> <? } ?>
+            <?php if($row[category] == '0406') { ?>
+              <td>가공식품</td> <? } ?>
+            <?php if($row[category] == '0407') { ?>
+              <td>커피/생수/음료</td> <? } ?>
+            <?php if($row[category] == '0408') { ?>
+              <td>과자/간식</td> <? } ?>
+            <?php if($row[category] == '0409') { ?>
+              <td>즉석식품</td> <? } ?>
+            <?php if($row[category] == '0410') { ?>
+              <td>건강식품</td> <? } ?>
+
+            <?php if($row[category] == '0501') { ?>
+              <td>주방용품</td> <? } ?>
+            <?php if($row[category] == '0502') { ?>
+              <td>수납정리용품</td> <? } ?>
+            <?php if($row[category] == '0503') { ?>
+              <td>욕실용품</td> <? } ?>
+            <?php if($row[category] == '0504') { ?>
+              <td>청소용품</td> <? } ?>
+            <?php if($row[category] == '0505') { ?>
+              <td>세탁용품</td> <? } ?>
+            <?php if($row[category] == '0506') { ?>
+              <td>세제/방향/살충</td> <? } ?>
+            <?php if($row[category] == '0507') { ?>
+              <td>화장지</td> <? } ?>
+            <?php if($row[category] == '0508') { ?>
+              <td>구강/세안/면도</td> <? } ?>
+
+            <?php if($row[category] == '0601') { ?>
+              <td>침실가구</td> <? } ?>
+            <?php if($row[category] == '0602') { ?>
+              <td>거실가구</td> <? } ?>
+            <?php if($row[category] == '0603') { ?>
+              <td>서재/사무용가구</td> <? } ?>
+            <?php if($row[category] == '0604') { ?>
+              <td>유아동가구</td> <? } ?>
+            <?php if($row[category] == '0605') { ?>
+              <td>리모델링가구</td> <? } ?>
+            <?php if($row[category] == '0606') { ?>
+              <td>커튼/블라인드</td> <? } ?>
+            <?php if($row[category] == '0607') { ?>
+              <td>침구</td> <? } ?>
+            <?php if($row[category] == '0608') { ?>
+              <td>조명</td> <? } ?>
+
+            <?php if($row[category] == '0701') { ?>
+              <td>tv</td> <? } ?>
+            <?php if($row[category] == '0702') { ?>
+              <td>노트북</td> <? } ?>
+            <?php if($row[category] == '0703') { ?>
+              <td>냉장고</td> <? } ?>
+            <?php if($row[category] == '0704') { ?>
+              <td>카메라/주변기기</td> <? } ?>
+            <?php if($row[category] == '0705') { ?>
+              <td>모니터</td> <? } ?>
+            <?php if($row[category] == '0706') { ?>
+              <td>휴대폰</td> <? } ?>
+            <?php if($row[category] == '0707') { ?>
+              <td>세탁기/건조기</td> <? } ?>
+            <?php if($row[category] == '0708') { ?>
+              <td>영상가전</td> <? } ?>
+            <?php if($row[category] == '0709') { ?>
+              <td>데스크탑</td> <? } ?>
+            <?php if($row[category] == '0710') { ?>
+              <td>태블릿</td> <? } ?>
+            <?php if($row[category] == '0711') { ?>
+              <td>프린터/복합기</td> <? } ?>
+            <?php if($row[category] == '0712') { ?>
+              <td>게임</td> <? } ?>
+            <?php if($row[category] == '0713') { ?>
+              <td>pc부품</td> <? } ?>
+
+            <?php if($row[category] == '0801') { ?>
+              <td>도서/음반</td> <? } ?>
+            <?php if($row[category] == '0802') { ?>
+              <td>문구/사무용품</td> <? } ?>
+            <?php if($row[category] == '0803') { ?>
+              <td>화방용품</td> <? } ?>
+            <?php if($row[category] == '0804') { ?>
+              <td>악기</td> <? } ?>
+            <?php if($row[category] == '0805') { ?>
+              <td>취미</td> <? } ?>
+            <?php if($row[category] == '0806') { ?>
+              <td>꽃/원예</td> <? } ?>
+            <?php if($row[category] == '0807') { ?>
+              <td>강아지용품</td> <? } ?>
+            <?php if($row[category] == '0808') { ?>
+              <td>고양이용품</td> <? } ?>
+            <?php if($row[category] == '0809') { ?>
+              <td>조류용품</td> <? } ?>
+							 <td style="cursor: pointer">
+							<?php if($row[sell] ==2){?>
+
+							<!-- <a onclick="pop100()">  --> 
+							<a href="../itembuy.html?num=<?php echo $row[num];?>">  <?php }
+							else { ?>
+
+							<!-- <a onclick='pop200()'> -->
+							<a href="../item.html?num=<?php echo $row[num];?>">
+							<?php }
+							?>
+
+							<script>
+
+							function pop100()//팝업테스트
+							{
+							window.open("../itembuy.html?num=<?php echo $row[num];?>","테스트","width=900, height=820, left=550, top=240");
+							}
+							function pop200()//팝업테스트
+							{
+							window.open("../item.html?num= <?php echo $row[num];?>","테스트","width=900, height=820, left=550, top=240");
+							}
+							</script>
+
+							<?php echo $row[title]; ?></a></td>
+							<td><?php echo $row[tid]; ?></td>
+							<td><?php echo $row[date]; ?></td>
+						</tr>
+							
+							
+								<?php
+	
+}
+?>
+						</table>
+						<!--중앙 상품정렬 끝-->
+						<div class="load">
+							
+							<div class="pagination  justify-content-center">
+
+
+							<ul> 
+
+
+<?php if ($b_end_page > $total_page)  
+
+$b_end_page = $total_page; ?>
+
+
+
+
+		<?	  if($page <= 1){?>
+        <li class="page-item active"> <span class="page-link"> 처음</span> </li>
+        <?}else{?>
+          <li>  <span class="page-link"><a href="../sub/a.html?page=&list=<?=$list?>">처음 </span></a></li>
+        <?} ?>
+
+ 
+		<? if($block <=1){?>
+        
+		 <?}else{?>
+        <li><span class="page-link"><a href="../sub/a.html?page=<?=$b_start_page-1?>">이전</a></span></li>
+		<?} ?>
+
+
+
+
+
+
+
+	 <? 
+		for($j = $b_start_page; $j <=$b_end_page; $j++) { 
+			if($page == $j) {
+				echo '<li class="page-item active"><span class="page-link">'.$j.'</span></li>';
+			} else { 
+				
+				echo '<li class="page-item"><a class="page-link" href="../sub/a.html?page='.$j.'">'.$j.'</a></li>';
+
+			}	
+		} 
+	?>
+
+
+
+
+
+
+    <? $total_block = ceil($total_page/$b_pageNum_list); 
+ 
+    if($block >= $total_block)  { ?>
+    
+    <?}else{?>    
+        <li> <span class="page-link"> <font size=2><a href="../sub/a.html?page=<?=$b_end_page+1?>">다음</a></span> </li>
+    <?} ?>
+
+
+
+
+	<? if($page >= $total_page){?>
+ 
+            <li class="page-item active"><span class="page-link">마지막</span></li>
+        
+        <?}else{?>
+            <li ><span class="page-link"><a href="../sub/a.html?page=<?=$total_page?>">마지막</span></a></li>
+ 
+        <?}
+    ?>
+
+
+ 
+
+
+							</ul>
+							</div>
+							</div>
+						</div>
+            		</div>
+
+</body>
+</html>
